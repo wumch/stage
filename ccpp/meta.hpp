@@ -14,13 +14,22 @@
  * 平台兼容原则：以不大的代价换取一定的兼容性；以首要目标平台0-overhead为前提。
  */
 
+#ifndef CS_USE_WCS
+#	define CS_USE_WCS	0
+#endif
+
 #ifndef NDEBUG
 #	ifndef CS_DEBUG
-#   	define CS_DEBUG 1
+#   	define CS_DEBUG		2
+#	endif
+#	ifndef CS_LOG_ON
+#		define CS_LOG_ON	1
 #	endif
 #else
 #	undef CS_DEBUG
-#	define CS_DEBUG 0
+#	define CS_DEBUG			0
+#	undef CS_LOG_ON
+#	define CS_LOG_ON		0
 #endif
 
 #include <boost/cstdint.hpp>
@@ -34,6 +43,16 @@
 #	define CS_PREF_STD(symbol)		symbol
 #endif
 
+#if CS_USE_WCS
+#	define CS_STDIN		::std::wcin
+#	define CS_STDOUT	::std::wcout
+#	define CS_STDERR	::std::wcerr
+#else
+#	define CS_STDIN		::std::cin
+#	define CS_STDOUT	::std::cout
+#	define CS_STDERR	::std::cerr
+#endif
+
 #define CS_OC_BLACK(...)	"\033[32;30;5m" << __VA_ARGS__ << "\033[0m"
 #define CS_OC_BLUE(...)		"\033[32;34;5m" << __VA_ARGS__ << "\033[0m"
 #define CS_OC_RED(...)		"\033[32;31;5m" << __VA_ARGS__ << "\033[0m"
@@ -42,43 +61,51 @@
 #if CS_DEBUG
 #   include <iostream>
 #   if CS_DEBUG > 1
-#       define GOL_OUT(ostream, ...)													\
-            ostream << std::unitbuf << CS_OC_BLACK(__FILE__ ":" << __LINE__)			\
-				<< ":\t" << CS_OC_BLUE(__FUNCTION__ "()") << ":\t"						\
-				<< CS_OC_GREEN(__VA_ARGS__)												\
-				<< std::endl << std::nounitbuf;
+#		if CS_USE_WCS
+#			define CS_OUT(ostream, ...)													\
+				ostream << __FILE__ << ":" << __LINE__					\
+					<< ":" << __FUNCTION__ << "()" << ":\t"							\
+					<< __VA_ARGS__														\
+					<< ::std::endl;
+#		else
+#       	define CS_OUT(ostream, ...)													\
+				ostream << CS_OC_BLACK(__FILE__ << ":" << __LINE__)		\
+					<< ":" << CS_OC_BLUE(__FUNCTION__ << "()") << ":\t"				\
+					<< CS_OC_GREEN(__VA_ARGS__)											\
+					<< ::std::endl;
+#		endif
 #   else
-#		define GOL_OUT(ostream, ...)	ostream << __VA_ARGS__ << std::endl;
+#		define CS_OUT(ostream, ...)	ostream << __VA_ARGS__ << ::std::endl;
 #   endif
 #else
 #	define CS_OUT(ostream, ...)
 #endif
 
-#define CS_SAY(...)		CS_OUT(std::cout, __VA_ARGS__)
-#define CS_ERR(...)		CS_OUT(std::cerr, __VA_ARGS__)
-#define CS_DUMP(...)	CS_OUT(std::cout, GOL_OC_BLUE(#__VA_ARGS__) << ": " << GOL_OC_GREEN(__VA_ARGS__))
-#   define CS_DUMP(...)																	\
-        std::cout <<  CS_OC_BLACK(__FILE__ ":" << __LINE__)								\
-			<< "\t" << CS_OC_BLUE(__FUNCTION__) << CS_OC_BLUE("(...)") << ":\t"			\
-			<< CS_OC_RED(#__VA_ARGS__) << ":[" << CS_OC_GREEN(__VA_ARGS__) << "]"		\
-			<< std::endl
-#	define CS_DUMP_N(...) 																\
-        std::cout <<  CS_OC_BLACK(__FILE__ ":") << CS_OC_BLACK(__LINE__) 				\
-			<< "\t" << CS_OC_BLUE(__FUNCTION__) << CS_OC_BLUE("(...)") << ":\t" 		\
-			<< CS_OC_RED(#__VA_ARGS__) << ":" << std::endl << CS_OC_GREEN(__VA_ARGS__) 	\
-			<< std::endl
-
-#define CS_SAY(...)		CS_OUT(std::cout, __VA_ARGS__)
-#define CS_ERR(...) 	CS_OUT(std::cerr, CS_OC_RED(__VA_ARGS__))
-#define CS_DUMP(...)	CS_OUT(std::cout, CS_OC_BLUE(#__VA_ARGS__) << ": " << CS_OC_GREEN(__VA_ARGS__))
+#define CS_SAY(...)		CS_OUT(CS_STDOUT, __VA_ARGS__)
 
 // NOTE: 要自行 #include <iostream>
-#define CS_ERR(msg) 																	\
-	std::cerr << msg << std::endl
+#define CS_ERR(...)		CS_STDERR << __VA_ARGS__ << ::std::endl;
+
+//#define CS_DUMP(...)	CS_OUT(CS_STDOUT, GOL_OC_BLUE(#__VA_ARGS__) << ": " << GOL_OC_GREEN(__VA_ARGS__))
+
+#define CS_DUMP(...)																	\
+	CS_STDOUT <<  CS_OC_BLACK(__FILE__ ":" << __LINE__)									\
+		<< "\t" << CS_OC_BLUE(__FUNCTION__) << CS_OC_BLUE("(...)") << ":\t"				\
+		<< CS_OC_RED(#__VA_ARGS__) << ":[" << CS_OC_GREEN(__VA_ARGS__) << "]"			\
+		<< ::std::endl
+#define CS_DUMP_N(...) 																	\
+	CS_STDOUT <<  CS_OC_BLACK(__FILE__ ":") << CS_OC_BLACK(__LINE__) 					\
+		<< "\t" << CS_OC_BLUE(__FUNCTION__) << CS_OC_BLUE("(...)") << ":\t" 			\
+		<< CS_OC_RED(#__VA_ARGS__) << ":" << ::std::endl << CS_OC_GREEN(__VA_ARGS__) 		\
+		<< ::std::endl
+
+
+// #define CS_ERR(msg)
+//	CS_STDERR << msg << ::std::endl
 // --- 要自行 #include <cstdlib>
 #define CS_DIE(msg)																		\
 	CS_ERR(msg); 																		\
-    std::exit(CS_EXIT_STATUS_FAILED)
+    ::std::exit(CS_EXIT_STATUS_FAILED)
 
 #ifndef CS_USED
 #	ifdef __GNUC__

@@ -3,6 +3,8 @@
 
 #include "meta.hpp"
 
+#define CS_CONST_STRLEN(s)			(sizeof(s) / sizeof(char) - 1)
+
 // 宏flag：IS_LITTLE_ENDIAN
 #include <endian.h>
 #if __BYTE_ORDER == __LITTLE_ENDIAN
