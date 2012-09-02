@@ -89,15 +89,13 @@
 //#define CS_DUMP(...)	CS_OUT(CS_STDOUT, GOL_OC_BLUE(#__VA_ARGS__) << ": " << GOL_OC_GREEN(__VA_ARGS__))
 
 #define CS_DUMP(...)																	\
-	CS_STDOUT <<  CS_OC_BLACK(__FILE__ ":" << __LINE__)									\
+	CS_OUT(CS_STDOUT,  CS_OC_BLACK(__FILE__ ":" << __LINE__)									\
 		<< "\t" << CS_OC_BLUE(__FUNCTION__) << CS_OC_BLUE("(...)") << ":\t"				\
-		<< CS_OC_RED(#__VA_ARGS__) << ":[" << CS_OC_GREEN(__VA_ARGS__) << "]"			\
-		<< ::std::endl
+		<< CS_OC_RED(#__VA_ARGS__) << ":[" << CS_OC_GREEN(__VA_ARGS__) << "]")
 #define CS_DUMP_N(...) 																	\
-	CS_STDOUT <<  CS_OC_BLACK(__FILE__ ":") << CS_OC_BLACK(__LINE__) 					\
+	CS_OUT(CS_STDOUT, CS_OC_BLACK(__FILE__ ":") << CS_OC_BLACK(__LINE__) 					\
 		<< "\t" << CS_OC_BLUE(__FUNCTION__) << CS_OC_BLUE("(...)") << ":\t" 			\
-		<< CS_OC_RED(#__VA_ARGS__) << ":" << ::std::endl << CS_OC_GREEN(__VA_ARGS__) 		\
-		<< ::std::endl
+		<< CS_OC_RED(#__VA_ARGS__) << ":" << ::std::endl << CS_OC_GREEN(__VA_ARGS__))
 
 
 // #define CS_ERR(msg)
