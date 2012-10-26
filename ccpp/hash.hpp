@@ -2,24 +2,28 @@
 #pragma once
 
 #include "meta.hpp"
-#include <boost/static_assert.hpp>
+#ifdef __linux
+#	include <limits.h>
+#endif
 #include <string>
+#include <boost/static_assert.hpp>
 
 namespace staging {
 
-template<std::size_t size>
+template<uint8_t bits, typename StringType = std::string>
 class Hflp
 {
+	BOOST_STATIC_ASSERT(bits <= (sizeof(int) * CHAR_BIT));
 public:
-	std::string::size_type operator()(const std::string& data) const
+	uint32_t operator()(const StringType& data) const
 	{
 		unsigned int mask = 0;
 		char* res = reinterpret_cast<char*>(&mask);
-		for (int i = 0; i < data.size(); ++i)
+		for (uint i = 0; i < data.size(); ++i)
 		{
 			res[i & 3] ^= data[i];
 		}
-		return mask % data.size();
+		return mask & ((1 << bits) - 1);
 	}
 };
 

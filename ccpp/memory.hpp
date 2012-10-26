@@ -42,7 +42,7 @@
 
 namespace staging {
 
-template<size_t dwords> CS_FORCE_INLINE
+template<size_t dwords> CS_FORCE_INLINE static
 int memcmp4(const int32_t* const s1, const int32_t* const s2)
 {
 	return ::memcmp(s1, s2, dwords * 4);
@@ -99,7 +99,7 @@ int memcmp4<7>(const int32_t* const s1, const int32_t* const s2)
 }
 
 // ------ memcpy4 ------
-template<size_t dwords> CS_FORCE_INLINE
+template<size_t dwords> CS_FORCE_INLINE static
 void memcpy4(void* const s1, const void* const s2)
 {
 	::memcpy(s1, s2, dwords);

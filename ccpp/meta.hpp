@@ -58,6 +58,18 @@
 #define CS_OC_RED(...)		"\033[32;31;5m" << __VA_ARGS__ << "\033[0m"
 #define CS_OC_GREEN(...)	"\033[32;49;5m" << __VA_ARGS__ << "\033[0m"
 
+
+// line-seperator, should only use for IO..
+#ifdef __linux
+#	define CS_LINESEP	'\n'
+#else
+#	ifdef(__windows)
+#		define CS_LINESEP	"\r\n"
+#	else
+#		define CS_LINESEP	::std::endl
+#	endif
+#endif
+
 #if CS_DEBUG
 #   include <iostream>
 #   if CS_DEBUG > 1
@@ -84,9 +96,10 @@
 #define CS_SAY(...)		CS_OUT(CS_STDOUT, __VA_ARGS__)
 
 // NOTE: 要自行 #include <iostream>
+#define CS_ECHO(...)	CS_STDOUT << __VA_ARGS__ << ::std::endl;
 #define CS_ERR(...)		CS_STDERR << __VA_ARGS__ << ::std::endl;
 
-//#define CS_DUMP(...)	CS_OUT(CS_STDOUT, GOL_OC_BLUE(#__VA_ARGS__) << ": " << GOL_OC_GREEN(__VA_ARGS__))
+// #define CS_DUMP(...)	CS_OUT(CS_STDOUT, GOL_OC_BLUE(#__VA_ARGS__) << ": " << GOL_OC_GREEN(__VA_ARGS__))
 
 #define CS_DUMP(...)																	\
 	CS_OUT(CS_STDOUT,  CS_OC_BLACK(__FILE__ ":" << __LINE__)									\
@@ -166,3 +179,9 @@
 #		define CS_PREFETCH(addr,rw,clean)
 #	endif
 #endif
+
+#define CS_RETURN_IF(cond, ...)		\
+if (cond)							\
+{									\
+	return __VA_ARGS__;				\
+}
