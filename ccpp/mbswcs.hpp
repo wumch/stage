@@ -1,7 +1,10 @@
 
+#pragma once
+
 #include "meta.hpp"
 #include <cstdlib>
 #include <string>
+#include <iconv.h>
 
 namespace staging {
 
@@ -69,6 +72,16 @@ public:
 	static void setlocale(const char* lc_all = "")
 	{
 		std::setlocale(LC_ALL, lc_all);
+	}
+
+	static void code_convert(const char *from_charset, const char *to_charset, char *inbuf, size_t inlen, char *outbuf, size_t outlen)
+	{
+		 iconv_t cd;
+
+		 CS_RETURN_IF((cd = iconv_open(to_charset, from_charset)) == NULL);
+		 iconv(cd, &inbuf, &inlen, &outbuf, &outlen);
+
+		 iconv_close(cd);
 	}
 };
 

@@ -10,6 +10,16 @@
 
 namespace staging {
 
+template<uint32_t mod, typename IntType = uint64_t>
+class ModHash
+{
+public:
+	IntType operator()(IntType val) const
+	{
+		return val % mod;
+	}
+};
+
 template<uint8_t bits, typename StringType = std::string>
 class Hflp
 {
