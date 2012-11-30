@@ -6,6 +6,7 @@
 namespace staging {
 
 template<int tagid_> class AutoIncrTag {};
+template<typename tag_type> class AutoIncrType {};
 
 class AutoIncrDefaultTrait
 {
@@ -31,14 +32,24 @@ public:
 		return instance_;
 	}
 
+	inttype operator()()
+	{
+		return gen();
+	}
+
 	inttype gen()
 	{
 		return ++cur;
 	}
 
-	inttype last()
+	inttype last() const
 	{
 		return cur;
+	}
+
+	inttype next() const
+	{
+		return cur + 1;
 	}
 
 private:

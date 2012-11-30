@@ -61,12 +61,15 @@
 
 // line-seperator, should only use for IO..
 #ifdef __linux
-#	define CS_LINESEP	'\n'
+#	define CS_LINESEP		'\n'
+#	define CS_LINESEP_STR	"\n"
 #else
 #	ifdef(__windows)
-#		define CS_LINESEP	"\r\n"
+#		define CS_LINESEP		"\r\n"
+#		define CS_LINESEP_STR	CS_LINESEP
 #	else
-#		define CS_LINESEP	::std::endl
+#		define CS_LINESEP		::std::endl
+#		define CS_LINESEP_STR	::std::endl()
 #	endif
 #endif
 
@@ -175,8 +178,10 @@
 #	endif
 #endif
 
-#define CS_RETURN_IF(cond, ...)		\
-if (CS_BUNLIKELY(cond))							\
+#define CS_RETURN_IF_NORMAL(cond, ...)		\
+if (cond)							\
 {									\
 	return __VA_ARGS__;				\
 }
+
+#define CS_RETURN_IF(cond, ...) CS_RETURN_IF_NORMAL(CS_BUNLIKELY(cond), __VA_ARGS__)
