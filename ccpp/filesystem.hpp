@@ -11,12 +11,21 @@ static uint64_t filesize(const char *path)
 {
     unsigned long filesize = -1;
     struct stat statbuff;
-    if(stat(path, &statbuff) < 0){
+    if(stat(path, &statbuff) < 0)
+    {
         return filesize;
-    }else{
+    }
+    else
+    {
         filesize = statbuff.st_size;
     }
     return filesize;
 }
+
+//static inline char* mmap(FILE* fp, size_t length, int prot)
+//{
+//	int fd = fileno(fp);
+//	mmap(fd, length, prot)
+//}
 
 }

@@ -35,7 +35,7 @@
 #include <boost/cstdint.hpp>
 #include <cstddef>
 
-#define CS_EXIT_STATUS_FAILED 1
+#define CS_EXIT_STATUS_FAILED EXIT_FAILURE
 
 #ifdef __cplusplus
 #	define CS_PREF_STD(symbol)		std::symbol
@@ -179,9 +179,24 @@
 #endif
 
 #define CS_RETURN_IF_NORMAL(cond, ...)		\
-if (cond)							\
-{									\
-	return __VA_ARGS__;				\
+if (cond)									\
+{											\
+	return __VA_ARGS__;						\
 }
-
 #define CS_RETURN_IF(cond, ...) CS_RETURN_IF_NORMAL(CS_BUNLIKELY(cond), __VA_ARGS__)
+
+#define CS_ABORT_IF_NORMAL(cond)			\
+if (cond)									\
+{											\
+	::std::exit(CS_EXIT_STATUS_FAILED);		\
+}
+#define CS_ABORT_IF(cond) CS_ABORT_IF_NORMAL(CS_BUNLIKELY(cond))
+
+#define _CS_DIE_IF_NORMAL(cond, info, why)		\
+if (cond)									\
+{											\
+	CS_ERR(__FILE__ << ":" << __LINE__ << "::" << __FUNCTION__ << "() die on " << info << ", results from {" << #why << "}.");							\
+	::std::exit(CS_EXIT_STATUS_FAILED);		\
+}
+#define CS_DIE_IF_NORMAL(cond, info) CS_DIE_IF_NORMAL(cond, info, cond)
+#define CS_DIE_IF(cond, info) _CS_DIE_IF_NORMAL(CS_BUNLIKELY(cond), info, cond)

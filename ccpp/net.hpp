@@ -6,6 +6,7 @@
 #endif
 
 #include "meta.hpp"
+#include "misc.hpp"
 #include <string>
 #include <sys/types.h>
 #include <sys/ioctl.h>
@@ -91,6 +92,51 @@ static inline std::string getLanIP(const std::string& fallback = std::string("12
 static inline std::string getWanIP(const std::string& fallback = std::string("0.0.0.0"))
 {
 	return iterOnInterface(isWanIP, fallback);
+}
+
+template<typename BytesType>
+CS_FORCE_INLINE BytesType ntoh(BytesType a)
+{
+	BOOST_STATIC_ASSERT(sizeof(char) == 1);
+	char assist[sizeof(BytesType)];
+	memcpy(assist, &a, sizeof(BytesType));
+	char c;
+	for (int i = 0; i < (sizeof(BytesType) >> 1); ++i)
+	{
+		c = assist[i];
+		assist[i] = assist[sizeof(BytesType) - 1 - i];
+		assist[sizeof(BytesType) - 1 - i] = c;
+	}
+	return *reinterpret_cast<BytesType*>(assist);
+}
+
+#if CS_IS_LITTLE_ENDIAN
+CS_FORCE_INLINE uint64_t ntohll(uint64_t value)
+{
+   static union {
+      uint64_t ull;
+      uint8_t  c[8];
+   } x;
+   x.ull = value;
+
+   int8_t c = 0;
+   c = x.c[0]; x.c[0] = x.c[7]; x.c[7] = c;
+   c = x.c[1]; x.c[1] = x.c[6]; x.c[6] = c;
+   c = x.c[2]; x.c[2] = x.c[5]; x.c[5] = c;
+   c = x.c[3]; x.c[3] = x.c[4]; x.c[4] = c;
+
+   return x.ull;
+}
+#else
+CS_FORCE_INLINE uint64_t ntohll(uint64_t value)
+{
+	return value;
+}
+#endif
+
+CS_FORCE_INLINE uint64_t htonll(const uint64_t value)
+{
+   return ntohll(value);
 }
 
 }

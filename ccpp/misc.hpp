@@ -5,7 +5,9 @@
 #include <boost/static_assert.hpp>
 
 #define CS_CONST_STRLEN(s)			(sizeof(s) / sizeof(char) - 1)
-BOOST_STATIC_ASSERT(CS_CONST_STRLEN("abc") == 3);
+#if !(defined(CS_WORKAROUND_MBCHAR) && CS_WORKAROUND_MBCHAR)
+	BOOST_STATIC_ASSERT(CS_CONST_STRLEN("abc") == 3);
+#endif
 
 // 宏flag：IS_LITTLE_ENDIAN
 #include <endian.h>

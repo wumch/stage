@@ -12,7 +12,7 @@
 
 namespace staging {
 
-CS_FORCE_INLINE std::size_t getCpuNum()
+static CS_FORCE_INLINE std::size_t getCpuNum()
 {
 #ifdef __linux
 	return sysconf(_SC_NPROCESSORS_CONF);
@@ -21,7 +21,7 @@ CS_FORCE_INLINE std::size_t getCpuNum()
 #endif
 }
 
-CS_FORCE_INLINE rlim_t getRlimitCur(int resource)
+static CS_FORCE_INLINE rlim_t getRlimitCur(int resource)
 {
 #ifdef __linux
 	struct rlimit limit;
@@ -32,7 +32,7 @@ CS_FORCE_INLINE rlim_t getRlimitCur(int resource)
 #endif
 }
 
-CS_FORCE_INLINE rlim_t getRlimitMax(int resource)
+static CS_FORCE_INLINE rlim_t getRlimitMax(int resource)
 {
 #ifdef __linux
 	struct rlimit limit;
@@ -43,7 +43,7 @@ CS_FORCE_INLINE rlim_t getRlimitMax(int resource)
 #endif
 }
 
-CS_FORCE_INLINE int setRlimit(int resource, rlim_t expect)
+static CS_FORCE_INLINE int setRlimit(int resource, rlim_t expect)
 {
 #ifdef __linux
 	struct rlimit limit;
