@@ -2,7 +2,6 @@
 
 import os
 import sys
-import traceback
 
 
 class Tracer(object):
@@ -186,7 +185,8 @@ if __name__ == '__main__':
     try:
         Test().caller()
     except NotImplementedError, e:
-        settings = dict(root_path=root_path, abspath=True, file_path='', omit_root=True)
+        settings = dict(
+            root_path=root_path, abspath=True, file_path='', omit_root=True)
         print Tracer(max_depth=3, **settings).prety()
         sys.exc_clear()
         print Tracer(max_depth=10, **settings).trace()
