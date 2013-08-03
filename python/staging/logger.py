@@ -19,8 +19,8 @@ class LogHandler(logging.FileHandler):
 
     def format(self, record):
         return datetime.now().strftime(self.date_format) + \
-            (' %(levelname)s %(filename)s:%(lineno)d \
-%(className)s%(funcName)s%(args)s %(msg)s' % record.__dict__)
+            (' %(levelname)s[%(process)d] %(filename)s:%(lineno)d \
+%(funcName)s%(args)s: %(msg)s' % record.__dict__)
 
 
 class Logger(logging.RootLogger):
@@ -47,19 +47,29 @@ class Logger(logging.RootLogger):
         self.tracer = tracer or Tracer(max_depth=10, extra_skip=2)
         self.also_print = also_print
 
-    def trace_exception(self, exception):
+    def trace_exception(self, e):
         """ log an exception with prety tracing information.
         """
-        if isinstance(exception, PSException):
+        if isinstance(e, PSException):
             self.error(
-                str(exception.code) + exception.message + str(exception.args))
+                'raised %s(code=%d, message=%s)' %
+                (e.__class__.__name__, e.code, e.message)
+            )
         else:
-            self.error(str(exception.args))
+            self.error('raised ' + e.__class__.__name__ +
+                       (str(e.args)[:-2] + ')' if e.args else '()'))
 
-    def error(self, msg, *args, **kwargs):
+    def error(self, msg, exc_info=None, *args, **kwargs):
         if self.also_print:
-            print >>sys.stderr, self, msg + ";trace: " + self.tracer.prety()
-        logging.RootLogger.error(self, msg + ";trace: " + self.tracer.prety())
+            print >>sys.stderr, msg + ". trace: " + self.tracer.prety()
+        logging.RootLogger.error(
+            self, msg + ". trace: " + self.tracer.prety(), *args, **kwargs)
+
+    def findCaller(self):
+        f = sys._getframe(5 if any(sys.exc_info()) else 4)
+        return (f.f_code.co_filename, f.f_lineno, f.f_code.co_name) \
+            if f and f.f_code \
+            else ("(unknown file)", 0, "(unknown function)")
 
     @classmethod
     def set_instance(cls, logger_instance):
@@ -97,12 +107,17 @@ def test_logger():
 
     Logger.set_instance(Logger(logfile=logfile, also_print=True))
 
-    def test():
-        try:
-            raise Exception("exception raised for test logger")
-        except Exception, e:
-            Logger.instance().trace_exception(e)
+    class Test(object):
 
-    test()
-    print '-' * 20, 'content of %s' % logfile, '-' * 20
-    os.system("cat %s" % logfile)
+        def test(self):
+            try:
+                raise Exception("exception raised for test logger")
+            except Exception, e:
+                Logger.instance().trace_exception(e)
+
+    Test().test()
+    Logger.instance().error("an error log")
+
+    print
+    print '-' * 20, 'appended to "%s" right now:' % logfile, '-' * 20
+    os.system("tail -n 2 %s" % logfile)

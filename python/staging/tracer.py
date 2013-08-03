@@ -30,12 +30,13 @@ class Tracer(object):
     class FrameInfo(object):
 
         def __init__(self, filepath=None, lineno=None,
-                     funcname=None, code=None):
-            self.filepath, self.lineno, self.funcname, self.code =\
-                filepath, lineno, funcname, code
+                     clsname=None, funcname=None, code=None):
+            self.filepath, self.lineno, self.clsname, self.funcname, \
+                self.code = filepath, lineno, clsname, funcname, code
 
         def __repr__(self):
-            return str([self.filepath, self.lineno, self.funcname])
+            return str(
+                [self.filepath, self.lineno, self.clsname, self.funcname])
 
     def __init__(self, max_depth=1000, funcname=True, filepath=True,
                  lineno=True, abspath=False, singleline=True,
@@ -111,19 +112,19 @@ class Tracer(object):
     def _trace(self, depth=None, sp=None):
         info = sys.exc_info()
         return self._trace_normal(depth=depth, sp=sp) if info[2] is None \
-            else self._traceException(depth=depth, tb=info[2])
+            else self._trace_exception(depth=depth, tb=info[2])
 
-    def _traceException(self, depth=None, tb=None):
+    def _trace_exception(self, depth=None, tb=None):
         depth = self._get_depth(depth=depth)
         cur = 0
-        path = []
+        chain = []
         for filepath, lineno, funcname, code in traceback.extract_tb(tb=tb):
-            path.insert(0, self._gen_info(
+            chain.insert(0, self._gen_info(
                 path=filepath, lineno=lineno, funcname=funcname, code=code))
             cur += 1
             if cur > depth:
                 break
-        return path
+        return chain
 
     def _trace_normal(self, depth=None, sp=None):
         sp = sp or self.skip + self.extra_skip
@@ -139,9 +140,16 @@ class Tracer(object):
 
     def _gen_info_from_frame(self, frame):
         fcode = frame.f_code
+        if 'self' in frame.f_locals:
+            funcname = frame.f_locals['self'].__class__.__name__ \
+                + '.' + fcode.co_name
+        elif 'cls' in frame.f_locals:
+            funcname = frame.f_locals['cls'].__name__ + '::' + fcode.co_name
+        else:
+            funcname = fcode.co_name
         return self._gen_info(
-            path=fcode.co_filename,
-            lineno=frame.f_lineno, funcname=fcode.co_name)
+            path=fcode.co_filename, lineno=frame.f_lineno,
+            funcname=funcname)
 
     def _gen_info(self, path, lineno, funcname, code=None):
         finfo = self.FrameInfo()
