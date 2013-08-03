@@ -7,6 +7,7 @@
 #	include <unistd.h>
 #	include <sys/mman.h>
 #else
+typedef int64_t rlim_t;
 #	error "system other than linux is currently not supported."
 #endif
 
