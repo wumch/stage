@@ -18,13 +18,13 @@ class Tracer(object):
     >>>     Tester().caller()
     >>> except NotImplementedError, e:
     >>>     print Tracer(max_depth=3).prety()
-    /utility/tracer.py:182:callee(){raise NotImplementedError()} <= /utility/tra
-    cer.py:178:caller(){self.callee()} <= /utility/tracer.py:186:<module>{Test()
+    /staging/tracer.py:182:callee(){raise NotImplementedError()} <= /staging/tra
+    cer.py:178:caller(){self.callee()} <= /staging/tracer.py:186:<module>{Test()
     .caller()}
     >>>     sys.exc_clear()
-    >>>     print Tracer(max_depth=10, **settings).trace()
-    [['/data/fsuggest/tboss/tboss/utility/tracer.py', 94, 'trace'], ['/data/fsug
-    gest/tboss/tboss/utility/tracer.py', 191, '<module>']]
+    >>>     print Tracer(max_depth=10).trace()
+    [['/staging/tracer.py', 94, 'trace'], ['/staging/tracer.py', 191, '<module>'
+    ]]
     """
 
     class FrameInfo(object):
