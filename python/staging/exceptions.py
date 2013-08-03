@@ -9,10 +9,10 @@ class PSException(Exception):
     __err_code_generic = -1
     __err_code = __err_code_generic
 
-    def __init__(self, code=None, message='', *args, **kwargs):
+    def __init__(self, message='', code=None, *args, **kwargs):
         super(PSException, self).__init__(self, *args, **kwargs)
-        self.code = self.__class__.__err_code if code is None else code
         self.message = message
+        self.code = self.__class__.__err_code if code is None else code
 
 
 class NotImplementedException(PSException, NotImplementedError):

@@ -44,7 +44,7 @@ class Logger(logging.RootLogger):
         self.setLevel(logging.NOTSET)
         self.removeHandler(self.handlers)
         self.addHandler(LogHandler(filename=logfile))
-        self.tracer = tracer or Tracer(max_depth=10, extra_skip=2)
+        self.tracer = tracer or Tracer(max_depth=10, extra_skip=3)
         self.also_print = also_print
 
     def trace_exception(self, e):
@@ -52,7 +52,7 @@ class Logger(logging.RootLogger):
         """
         if isinstance(e, PSException):
             self.error(
-                'raised %s(code=%d, message=%s)' %
+                'raised %s(code=%d, message="%s")' %
                 (e.__class__.__name__, e.code, e.message)
             )
         else:
@@ -61,9 +61,9 @@ class Logger(logging.RootLogger):
 
     def error(self, msg, exc_info=None, *args, **kwargs):
         if self.also_print:
-            print >>sys.stderr, msg + ". trace: " + self.tracer.prety()
+            print >>sys.stderr, msg + ". <= " + self.tracer.prety()
         logging.RootLogger.error(
-            self, msg + ". trace: " + self.tracer.prety(), *args, **kwargs)
+            self, msg + ". <= " + self.tracer.prety(), *args, **kwargs)
 
     def findCaller(self):
         f = sys._getframe(5 if any(sys.exc_info()) else 4)
@@ -96,10 +96,11 @@ def test_logger():
 
     import os
     import sys
+    from .exceptions import NotImplementedException
 
     source_root = os.path.join(
         os.path.dirname(
-            os.path.dirname(os.path.dirname(os.path.realpath(__file__)))))
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
     if source_root not in sys.path:
         sys.path.append(source_root)
 
@@ -111,9 +112,11 @@ def test_logger():
 
         def test(self):
             try:
-                raise Exception("exception raised for test logger")
+                raise NotImplementedException()
             except Exception, e:
                 Logger.instance().trace_exception(e)
+
+    print '-' * 35, 'stdout/stderr:', '-' * 35
 
     Test().test()
     Logger.instance().error("an error log")

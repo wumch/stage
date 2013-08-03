@@ -118,12 +118,11 @@ class Tracer(object):
         depth = self._get_depth(depth=depth)
         cur = 0
         chain = []
-        for filepath, lineno, funcname, code in traceback.extract_tb(tb=tb):
-            chain.insert(0, self._gen_info(
-                path=filepath, lineno=lineno, funcname=funcname, code=code))
+        frame = tb.tb_frame.f_back
+        while frame and cur < depth:
+            chain.append(self._gen_info_from_frame(frame))
+            frame = frame.f_back
             cur += 1
-            if cur > depth:
-                break
         return chain
 
     def _trace_normal(self, depth=None, sp=None):
@@ -131,12 +130,12 @@ class Tracer(object):
         depth = self._get_depth(depth=depth)
         frame = sys._getframe(sp)
         cur = 0
-        path = []
+        chain = []
         while frame is not None and cur < depth:
-            path.append(self._gen_info_from_frame(frame))
+            chain.append(self._gen_info_from_frame(frame))
             frame = frame.f_back
             cur += 1
-        return path
+        return chain
 
     def _gen_info_from_frame(self, frame):
         fcode = frame.f_code
@@ -187,7 +186,7 @@ if __name__ == '__main__':
     try:
         Test().caller()
     except NotImplementedError, e:
-        settings = dict(root_path=root_path, file_path='', omit_root=True)
+        settings = dict(root_path=root_path, abspath=True, file_path='', omit_root=True)
         print Tracer(max_depth=3, **settings).prety()
         sys.exc_clear()
         print Tracer(max_depth=10, **settings).trace()
