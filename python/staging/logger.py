@@ -7,8 +7,10 @@ from .tracer import Tracer
 from .exceptions import PSException
 
 _default_date_format = '%Y-%m-%d %H:%I:%S.%s'
+_default_logger_name = 'staging'
 
 
+# currently not used.
 class LogHandler(logging.FileHandler):
 
     def __init__(self, filename, mode='a', encoding=None, delay=0,
@@ -23,47 +25,38 @@ class LogHandler(logging.FileHandler):
 %(funcName)s%(args)s: %(msg)s' % record.__dict__)
 
 
-class Logger(logging.RootLogger):
+class Logger(logging.Logger):
 
-    _instance = None
-
-    @classmethod
-    def instance(cls, logfile=None, also_print=False):
-        """
-        @param logfile:[=None] path of log file.
-            @attention: it's required when first time instantiate.
-        @param also_print:[=False] whether also print to stdout/stderr or not.
-        @rtype: Logger
-        """
-        if cls._instance is None and logfile is not None:
-            cls._instance = cls(logfile=logfile, also_print=also_print)
-        return cls._instance
-
-    def __init__(self, logfile, tracer=None, also_print=False):
-        logging.RootLogger.__init__(self, logging.NOTSET)
-        self.setLevel(logging.NOTSET)
-        self.removeHandler(self.handlers)
-        self.addHandler(LogHandler(filename=logfile))
+    def __init__(self, name=_default_logger_name, level=logging.NOTSET,
+                 tracer=None):
+        super(Logger, self).__init__(name, level=level)
         self.tracer = tracer or Tracer(max_depth=10, extra_skip=3)
-        self.also_print = also_print
+
+    def exception(self, excp, *args):
+        """ log an exception with prety tracing information.
+        @type excp: Exception or basestring
+        """
+        return self.trace_exception(excp) \
+            if isinstance(excp, Exception) else self.error(excp, *args)
 
     def trace_exception(self, e):
         """ log an exception with prety tracing information.
         """
         if isinstance(e, PSException):
-            self.error(
-                'raised %s(code=%d, message="%s")' %
+            self.trace_error(
+                'caught %s(code=%d, message="%s")' %
                 (e.__class__.__name__, e.code, e.message)
             )
         else:
-            self.error('raised ' + e.__class__.__name__ +
-                       (str(e.args)[:-2] + ')' if e.args else '()'))
+            self.trace_error(
+                'caught ' + e.__class__.__name__ +
+                (str(e.args)[:-2] + ')' if e.args else '()'))
 
-    def error(self, msg, exc_info=None, *args, **kwargs):
-        if self.also_print:
-            print >>sys.stderr, msg + ". <= " + self.tracer.prety()
-        logging.RootLogger.error(
-            self, msg + ". <= " + self.tracer.prety(), *args, **kwargs)
+    def trace_error(self, msg, *args, **kwargs):
+        """ log an error with prety tracing information.
+        """
+        super(Logger, self).error(
+            msg + ". <= " + self.tracer.prety(), *args, **kwargs)
 
     def findCaller(self):
         f = sys._getframe(5 if any(sys.exc_info()) else 4)
@@ -71,24 +64,28 @@ class Logger(logging.RootLogger):
             if f and f.f_code \
             else ("(unknown file)", 0, "(unknown function)")
 
-    @classmethod
-    def set_instance(cls, logger_instance):
-        """ set a Logger instance,
-        so that you can Logger.instance without arguments.
-        @type logger_instance Logger
-        """
-        cls._instance = logger_instance
 
-
-def make_logger(logfile, dateformat=_default_date_format, **log_handler_kwargs):
+def make_logger(logfile, name=_default_logger_name, level=logging.NOTSET,
+                echo=False, dateformat=_default_date_format):
+    """ make <Logger>.
+    @rtype: Logger
+    @attention: if `name` is specified as non-string, then will return a
+    <logging.RootLogger> instead of <Logger>.
     """
-    @rtype: logging.RootLogger
-    """
-    logger = logging.getLogger()
-    logger.setLevel(logging.NOTSET)
-    logger.removeHandler(logger.handlers)
-    logger.addHandler(LogHandler(
-        filename=logfile, date_format=dateformat, **log_handler_kwargs))
+    logging.setLoggerClass(Logger)
+    logger = logging.getLogger(name=name) \
+        if isinstance(name, basestring) else logging.getLogger()
+    if echo:
+        handler = logging.StreamHandler(stream=sys.stderr)
+        fmt = '%(levelname)s[%(process)d] %(filename)s:%(lineno)d \
+%(funcName)s%(args)s: %(msg)s'
+    else:
+        handler = logging.FileHandler(filename=logfile)
+        fmt = '%(asctime)s %(levelname)s[%(process)d] %(filename)s:%(lineno)d \
+%(funcName)s%(args)s: %(msg)s'
+    handler.setFormatter(logging.Formatter(fmt=fmt, datefmt=dateformat))
+    logger.addHandler(handler)
+    logger.setLevel(level=level)
     return logger
 
 
@@ -105,22 +102,26 @@ def test_logger():
         sys.path.append(source_root)
 
     logfile = '/tmp/test_logger.log'
-
-    Logger.set_instance(Logger(logfile=logfile, also_print=True))
+    logger = make_logger(logfile=logfile, echo=True)
 
     class Test(object):
 
-        def test(self):
+        @classmethod
+        def test(cls):
             try:
                 raise NotImplementedException()
             except Exception, e:
-                Logger.instance().trace_exception(e)
+                logger.trace_exception(e)
 
-    print '-' * 35, 'stdout/stderr:', '-' * 35
+    def caller():
+        Test().test()
 
-    Test().test()
-    Logger.instance().error("an error log")
+    print '-' * 35, 'stdout/stderr:', '-' * 36
+
+    caller()
+    logger.error("just log an error")
+    logger.trace_error("trace this as an error")
 
     print
     print '-' * 20, 'appended to "%s" right now:' % logfile, '-' * 20
-    os.system("tail -n 2 %s" % logfile)
+    os.system("tail -n 3 %s" % logfile)

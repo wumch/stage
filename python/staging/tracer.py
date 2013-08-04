@@ -2,6 +2,7 @@
 
 import os
 import sys
+import linecache
 
 
 class Tracer(object):
@@ -28,14 +29,12 @@ class Tracer(object):
 
     class FrameInfo(object):
 
-        def __init__(self, filepath=None, lineno=None,
-                     clsname=None, funcname=None, code=None):
-            self.filepath, self.lineno, self.clsname, self.funcname, \
-                self.code = filepath, lineno, clsname, funcname, code
+        def __init__(self, filepath=None, lineno=None, func=None, code=None):
+            self.filepath, self.lineno, self.func, \
+                self.code = filepath, lineno, func, code
 
         def __repr__(self):
-            return str(
-                [self.filepath, self.lineno, self.clsname, self.funcname])
+            return str([self.filepath, self.lineno, self.func])
 
     def __init__(self, max_depth=1000, funcname=True, filepath=True,
                  lineno=True, abspath=False, singleline=True,
@@ -84,9 +83,18 @@ class Tracer(object):
     def trace(self, depth=None):
         """ get the runtime tracing information as a list.
         @param depth:[=None] depth to trace. defaults according to `max_depth`.
+            @type depth int or None
         @rtype: list
         """
-        return self._trace(depth=depth, sp=self.skip+self.extra_skip+1)
+        return self._trace(depth=depth, skip=self.skip+self.extra_skip+1)
+
+    def trace_exception(self, depth=None):
+        """ get the exception traceback information as a list.
+        @param depth:[=None] depth to trace. defaults according to `max_depth`.
+            @type depth int or None
+        @rtype: list
+        """
+        return self._trace_exception(sys.exc_info()[2], depth=depth)
 
     def prety(self, depth=None):
         """ get the runtime tracing information as a prety formated string.
@@ -95,7 +103,7 @@ class Tracer(object):
         """
         return (' <= ' if self.singleline else os.linesep).join(
             map(self._pretys, self._trace(
-                depth=depth, sp=self.skip+self.extra_skip+1)))
+                depth=depth, skip=self.skip+self.extra_skip+1)))
 
     def _pretys(self, frame_info):
         return (frame_info.filepath[self.root_path_len:]
@@ -103,17 +111,17 @@ class Tracer(object):
                 frame_info.filepath.startswith(self.root_path)
                 else frame_info.filepath) \
             + ':' + str(frame_info.lineno) + ':' \
-            + frame_info.funcname \
-            + ("()" if frame_info.funcname != "<module>" else '') \
+            + frame_info.func \
+            + ("()" if frame_info.func != "<module>" else '') \
             + ('' if frame_info.code is None
                 else ('{' + frame_info.code + '}'))
 
-    def _trace(self, depth=None, sp=None):
+    def _trace(self, depth=None, skip=None):
         info = sys.exc_info()
-        return self._trace_normal(depth=depth, sp=sp) if info[2] is None \
+        return self._trace_normal(depth=depth, skip=skip) if info[2] is None \
             else self._trace_exception(depth=depth, tb=info[2])
 
-    def _trace_exception(self, depth=None, tb=None):
+    def _trace_exception(self, tb, depth=None):
         depth = self._get_depth(depth=depth)
         cur = 0
         chain = []
@@ -124,10 +132,10 @@ class Tracer(object):
             cur += 1
         return chain
 
-    def _trace_normal(self, depth=None, sp=None):
-        sp = sp or self.skip + self.extra_skip
+    def _trace_normal(self, depth=None, skip=None):
+        skip = skip or self.skip + self.extra_skip
         depth = self._get_depth(depth=depth)
-        frame = sys._getframe(sp)
+        frame = sys._getframe(skip)
         cur = 0
         chain = []
         while frame is not None and cur < depth:
@@ -139,24 +147,29 @@ class Tracer(object):
     def _gen_info_from_frame(self, frame):
         fcode = frame.f_code
         if 'self' in frame.f_locals:
-            funcname = frame.f_locals['self'].__class__.__name__ \
+            func = frame.f_locals['self'].__class__.__name__ \
                 + '.' + fcode.co_name
         elif 'cls' in frame.f_locals:
-            funcname = frame.f_locals['cls'].__name__ + '::' + fcode.co_name
+            func = frame.f_locals['cls'].__name__ + '::' + fcode.co_name
         else:
-            funcname = fcode.co_name
+            func = fcode.co_name
+        if self.code:
+            linecache.checkcache(fcode.co_filename)
+            code = linecache.getline(fcode.co_filename, lineno=frame.f_lineno,
+                                     module_globals=frame.f_globals).strip()
+        else:
+            code = None
         return self._gen_info(
-            path=fcode.co_filename, lineno=frame.f_lineno,
-            funcname=funcname)
+            path=fcode.co_filename, lineno=frame.f_lineno, func=func, code=code)
 
-    def _gen_info(self, path, lineno, funcname, code=None):
+    def _gen_info(self, path, lineno, func, code=None):
         finfo = self.FrameInfo()
         if self.filepath:
             finfo.filepath = os.path.abspath(path) if self.abspath else path
         if self.lineno:
             finfo.lineno = lineno
         if self.funcname:
-            finfo.funcname = funcname
+            finfo.func = func
         if self.code:
             finfo.code = code
         return finfo

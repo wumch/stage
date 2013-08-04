@@ -7,35 +7,42 @@ class PSException(Exception):
     """ Base class of exceptions provided by python-staging.
     """
     __err_code_generic = -1
-    __err_code = __err_code_generic
+    _err_code = __err_code_generic
 
     def __init__(self, message='', code=None, *args, **kwargs):
+        """
+        @param message: error message
+            @type message str or unicode
+        @param code: error code.
+            @type code int
+        """
         super(PSException, self).__init__(self, *args, **kwargs)
         self.message = message
-        self.code = self.__class__.__err_code if code is None else code
+        self.code = self._err_code if code is None else code
 
 
 class NotImplementedException(PSException, NotImplementedError):
     """ Prety and self-inspected version of built-in `NotImplementedError`.
     """
-    __err_code = 10086
+    _err_code = 10086
 
     def __init__(self, this=None):
         caller_frame = sys._getframe(1)
-        cls_name = 'global'
+        func = caller_frame.f_code.co_name
         if this is None:
             if 'self' in caller_frame.f_locals:
-                cls_name = '<%s>.%s' % \
+                func = '<%s>.%s' % \
                     (caller_frame.f_locals['self'].__class__.__name__,
                      caller_frame.f_code.co_name)
             elif 'cls' in caller_frame.f_locals:
-                cls_name = '%s::%s' % (caller_frame.f_locals['cls'].__name__,
-                                       caller_frame.f_code.co_name)
+                func = '%s::%s' % \
+                       (caller_frame.f_locals['cls'].__name__,
+                        caller_frame.f_code.co_name)
         elif isinstance(this, type):
-            cls_name = '%s::%s' % (this.__name__, caller_frame.f_code.co_name)
+            func = '%s::%s' % \
+                   (this.__name__, caller_frame.f_code.co_name)
         elif isinstance(this, object):
-            cls_name = '<%s>.%s' % (this.__class__.__name__,
-                                    caller_frame.f_code.co_name)
+            func = '<%s>.%s' % \
+                   (this.__class__.__name__, caller_frame.f_code.co_name)
         super(NotImplementedException, self).__init__(
-            'method ' + cls_name + '.' + caller_frame.f_code.co_name
-            + ' is not implemeted')
+            func + ' is not implemeted')
