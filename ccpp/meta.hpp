@@ -32,6 +32,11 @@
 #	define CS_LOG_ON		0
 #endif
 
+#if ! CS_DEBUG
+#	define NDEBUG
+#	define BOOST_DISABLE_ASSERTS
+#endif
+
 #include <boost/cstdint.hpp>
 #include <cstddef>
 
@@ -77,16 +82,16 @@
 #   include <iostream>
 #   if CS_DEBUG > 1
 #		if CS_USE_WCS
-#			define CS_OUT(ostream, ...)													\
-				ostream << __FILE__ << ":" << __LINE__					\
-					<< ":" << __FUNCTION__ << "()" << ":\t"							\
-					<< __VA_ARGS__														\
+#			define CS_OUT(ostream, ...)											\
+				ostream << __FILE__ << ":" << __LINE__							\
+					<< ":" << __FUNCTION__ << "()" << ":\t"						\
+					<< __VA_ARGS__												\
 					<< ::std::endl;
 #		else
-#       	define CS_OUT(ostream, ...)													\
-				ostream << CS_OC_BLACK(__FILE__ << ":" << __LINE__)		\
-					<< ":" << CS_OC_BLUE(__FUNCTION__ << "()") << ":\t"				\
-					<< CS_OC_GREEN(__VA_ARGS__)											\
+#       	define CS_OUT(ostream, ...)											\
+				ostream << CS_OC_BLACK(__FILE__ << ":" << __LINE__)				\
+					<< ":" << CS_OC_BLUE(__FUNCTION__ << "()") << ":\t"			\
+					<< CS_OC_GREEN(__VA_ARGS__)									\
 					<< ::std::endl;
 #		endif
 #   else

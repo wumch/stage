@@ -19,7 +19,7 @@ static CS_FORCE_INLINE bool between_open(ValueType val, ValueType min, ValueType
 }
 
 template<typename ValType>
-static CS_FORCE_INLINE ValType square(const ValType val)
+static CS_FORCE_INLINE ValType square(ValType val)
 {
 	return val * val;
 }
