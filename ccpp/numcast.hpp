@@ -10,15 +10,15 @@ class NumCast
 {
 public:
 	template<typename char_t>
-	static size_t strtoul(const char_t* const str, size_t bits)
+	static size_t strtoul(const char_t* const str, size_t chars)
 	{
 		size_t res = 0;
-		for (size_t i = 0; i < bits; ++i)
+		for (size_t i = 0; i < chars; ++i)
 		{
 			if (CS_BLIKELY('0' <= str[i] && str[i] <= '9'))
 			{
 				res *= 10;
-				res += (str[i] - 48);
+				res += (str[i] - '0');
 			}
 			else
 			{

@@ -14,10 +14,6 @@
  * 平台兼容原则：以不大的代价换取一定的兼容性；以首要目标平台0-overhead为前提。
  */
 
-#ifndef CS_USE_WCS
-#	define CS_USE_WCS	0
-#endif
-
 #ifndef NDEBUG
 #	ifndef CS_DEBUG
 #   	define CS_DEBUG		2
@@ -33,8 +29,26 @@
 #endif
 
 #if ! CS_DEBUG
+#ifndef NDEBUG
 #	define NDEBUG
+#endif
 #	define BOOST_DISABLE_ASSERTS
+#endif
+
+// Use wchar_t/wstring wcout/wcerr/wcin wfstream or not.
+// It's just a standard, not make used in this file.
+#ifndef CS_USE_WCS
+#	define CS_USE_WCS	0
+#endif
+// Use wcout/wcerr/wcin or not. This will make use in this file.
+#ifndef CS_USE_WIO
+#	define CS_USE_WIO	0
+#endif
+
+#if defined(CS_USE_WCS) && CS_USE_WCS
+#	define CS_STR_LITER(str_liter)		L##str_liter
+#else
+#	define CS_STR_LITER(str_liter)		str_liter
 #endif
 
 #include <boost/cstdint.hpp>
@@ -48,7 +62,7 @@
 #	define CS_PREF_STD(symbol)		symbol
 #endif
 
-#if CS_USE_WCS
+#if CS_USE_WIO
 #	define CS_STDIN		::std::wcin
 #	define CS_STDOUT	::std::wcout
 #	define CS_STDERR	::std::wcerr

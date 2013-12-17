@@ -4,13 +4,14 @@ from pyramid.settings import asbool, aslist
 
 
 def asint(val):
-    if isinstance(val, basestring):
+    """parse/convert anything to int. """
+    if isinstance(val, (str, unicode)):
         v = val.strip()
         return int(v) if v.isdigit() else 0
     elif isinstance(val, (int, float)):
         return int(val)
     elif isinstance(val, complex):
-        return val.real
+        return int(val.real)
     elif hasattr(val, '__int__'):
         return int(val)
     else:
