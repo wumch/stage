@@ -51,13 +51,23 @@
 #	define CS_STR_LITER(str_liter)		str_liter
 #endif
 
-#include <boost/cstdint.hpp>
-#include <cstddef>
+#ifdef __cplusplus
+#	if defined(__GNUC__)	\
+		&& defined(__GXX_EXPERIMENTAL_CXX0X__) && __GXX_EXPERIMENTAL_CXX0X__
+#		include <cstdint>
+#	else
+#		include <boost/cstdint.hpp>
+#	endif
+#	include <cstddef>
+#else
+#	include <stdint.h>
+#	include <stddef.h>
+#endif
 
 #define CS_EXIT_STATUS_FAILED EXIT_FAILURE
 
 #ifdef __cplusplus
-#	define CS_PREF_STD(symbol)		std::symbol
+#	define CS_PREF_STD(symbol)		::std::symbol
 #else
 #	define CS_PREF_STD(symbol)		symbol
 #endif
@@ -97,19 +107,23 @@
 #   if CS_DEBUG > 1
 #		if CS_USE_WCS
 #			define CS_OUT(ostream, ...)											\
+				do {															\
 				ostream << __FILE__ << ":" << __LINE__							\
 					<< ":" << __FUNCTION__ << "()" << ":\t"						\
 					<< __VA_ARGS__												\
-					<< ::std::endl;
+					<< ::std::endl;												\
+				} while(false);
 #		else
 #       	define CS_OUT(ostream, ...)											\
+				do {															\
 				ostream << CS_OC_BLACK(__FILE__ << ":" << __LINE__)				\
 					<< ":" << CS_OC_BLUE(__FUNCTION__ << "()") << ":\t"			\
 					<< CS_OC_GREEN(__VA_ARGS__)									\
-					<< ::std::endl;
+					<< ::std::endl;												\
+				} while(false);
 #		endif
 #   else
-#		define CS_OUT(ostream, ...)	ostream << __VA_ARGS__ << ::std::endl;
+#		define CS_OUT(ostream, ...)	do {ostream << __VA_ARGS__ << ::std::endl;} while(false);
 #   endif
 #else
 #	define CS_OUT(ostream, ...)
