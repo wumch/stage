@@ -51,12 +51,13 @@
 #	define CS_STR_LITER(str_liter)		str_liter
 #endif
 
+// avoid from boost if possible.
 #ifdef __cplusplus
 #	if defined(__GNUC__)	\
 		&& (!defined(__GXX_EXPERIMENTAL_CXX0X__) || !__GXX_EXPERIMENTAL_CXX0X__)
-#		include <cstdint>
-#	else
 #		include <boost/cstdint.hpp>
+#	else
+#		include <cstdint>
 #	endif
 #	include <cstddef>
 #else

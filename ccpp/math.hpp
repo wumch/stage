@@ -2,7 +2,9 @@
 #pragma once
 
 #include "meta.hpp"
+#include <cstdarg>
 #include <boost/operators.hpp>
+#include "misc.hpp"
 
 namespace staging {
 
@@ -33,6 +35,92 @@ static CS_FORCE_INLINE ResType sum(const IterType& begin, const IterType& end)
 		res += it->second;
 	}
 	return res;
+}
+
+/*
+ * CS_IN(needle, elem_1, elem_2, ...)
+ * NOTE: designed for only numeric-types.
+ */
+template<typename ValueType>
+static CS_FORCE_INLINE bool in(ValueType needle)
+{
+   return false;
+}
+
+template<typename ValueType>
+static CS_FORCE_INLINE bool in(ValueType needle,
+    ValueType elem_1)
+{
+    return needle == elem_1;
+}
+
+template<typename ValueType>
+static CS_FORCE_INLINE bool in(ValueType needle,
+    ValueType elem_1,
+    ValueType elem_2)
+{
+    return needle == elem_1 || needle == elem_2;
+}
+
+template<typename ValueType>
+static CS_FORCE_INLINE bool in(ValueType needle,
+    ValueType elem_1,
+    ValueType elem_2,
+    ValueType elem_3)
+{
+    return needle == elem_1 || needle == elem_2 || needle == elem_3;
+}
+
+template<typename ValueType>
+static CS_FORCE_INLINE bool in(ValueType needle,
+    ValueType elem_1,
+    ValueType elem_2,
+    ValueType elem_3,
+    ValueType elem_4)
+{
+    return needle == elem_1 || needle == elem_2 || needle == elem_3
+        || needle == elem_4;
+}
+
+template<typename ValueType>
+static CS_FORCE_INLINE bool in(ValueType needle,
+    ValueType elem_1,
+    ValueType elem_2,
+    ValueType elem_3,
+    ValueType elem_4,
+    ValueType elem_5)
+{
+    return needle == elem_1 || needle == elem_2 || needle == elem_3
+        || needle == elem_4 || needle == elem_5;
+}
+
+template<typename ValueType>
+static CS_FORCE_INLINE bool in(ValueType needle,
+    ValueType elem_1,
+    ValueType elem_2,
+    ValueType elem_3,
+    ValueType elem_4,
+    ValueType elem_5,
+    ValueType elem_6)
+{
+    return needle == elem_1 || needle == elem_2 || needle == elem_3
+        || needle == elem_4 || needle == elem_5 || needle == elem_6;
+}
+
+template<typename ValueType>
+static CS_FORCE_INLINE bool in(const ValueType needle, int argc, ...)
+{
+    std::va_list argp;
+    va_start(argp, argc);
+    for (int i = 0; i < argc; ++i)
+    {
+        if (va_arg(argp, ValueType) == needle)
+        {
+            return true;
+        }
+    }
+    va_end(argp);
+    return false;
 }
 
 // infinity
@@ -106,3 +194,8 @@ static inline bool operator==(const Infinitesimal<T>& val, const Infinitesimal<T
 }
 
 }
+
+#define CS_IN(needle, ...)                                                      \
+    (CS_PP_NARG(__VA_ARGS__) < 7 ?                                              \
+    staging::in(needle, __VA_ARGS__) :                                          \
+    staging::in(needle, CS_PP_NARG(__VA_ARGS__), __VA_ARGS__))
