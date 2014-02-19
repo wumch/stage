@@ -197,5 +197,5 @@ static inline bool operator==(const Infinitesimal<T>& val, const Infinitesimal<T
 
 #define CS_IN(needle, ...)                                                      \
     (CS_PP_NARG(__VA_ARGS__) < 7 ?                                              \
-    staging::in(needle, __VA_ARGS__) :                                          \
-    staging::in(needle, CS_PP_NARG(__VA_ARGS__), __VA_ARGS__))
+    staging::in<int64_t>(needle, __VA_ARGS__) :                                          \
+    staging::in<int64_t>(needle, CS_PP_NARG(__VA_ARGS__), __VA_ARGS__))

@@ -113,7 +113,7 @@
 					<< ":" << __FUNCTION__ << "()" << ":\t"						\
 					<< __VA_ARGS__												\
 					<< ::std::endl;												\
-				} while(false);
+				} while(false)
 #		else
 #       	define CS_OUT(ostream, ...)											\
 				do {															\
@@ -121,10 +121,10 @@
 					<< ":" << CS_OC_BLUE(__FUNCTION__ << "()") << ":\t"			\
 					<< CS_OC_GREEN(__VA_ARGS__)									\
 					<< ::std::endl;												\
-				} while(false);
+				} while(false)
 #		endif
 #   else
-#		define CS_OUT(ostream, ...)	do {ostream << __VA_ARGS__ << ::std::endl;} while(false);
+#		define CS_OUT(ostream, ...)	do {ostream << __VA_ARGS__ << ::std::endl;} while(false)
 #   endif
 #else
 #	define CS_OUT(ostream, ...)
@@ -226,11 +226,10 @@ if (cond)									\
 }
 #define CS_ABORT_IF(cond) CS_ABORT_IF_NORMAL(CS_BUNLIKELY(cond))
 
-#define _CS_DIE_IF_NORMAL(cond, info, why)		\
+#define _CS_DIE_IF_NORMAL(cond, info, why)	\
 if (cond)									\
 {											\
-	CS_ERR(__FILE__ << ":" << __LINE__ << "::" << __FUNCTION__ << "() die on " << info << ", results from {" << #why << "}.");							\
-	::std::exit(CS_EXIT_STATUS_FAILED);		\
+	CS_DIE(__FILE__ << ":" << __LINE__ << "::" << __FUNCTION__ << "() die on " << info << ", results from {" << #why << "}.");  \
 }
 #define CS_DIE_IF_NORMAL(cond, info) CS_DIE_IF_NORMAL(cond, info, cond)
 #define CS_DIE_IF(cond, info) _CS_DIE_IF_NORMAL(CS_BUNLIKELY(cond), info, cond)

@@ -37,14 +37,15 @@
     29,28,27,26,25,24,23,22,21,20, 														\
     19,18,17,16,15,14,13,12,11,10, 														\
      9, 8, 7, 6, 5, 4, 3, 2, 1, 0
+BOOST_STATIC_ASSERT(CS_PP_NARG(1,2,3,4) == 4);
 
 // 工具宏：定义enum，同时建立等价 std::tr1::array (不自动包含)
-#define ENUM_WITH_ARRAY(ENUM_NAME, ARRAY_NAME, ...) 														\
+#define CS_ENUM_WITH_ARRAY(ENUM_NAME, ARRAY_NAME, ...) 														\
 	enum ENUM_NAME {__VA_ARGS__}; 																			\
 	const std::tr1::array<ENUM_NAME,CS_PP_NARG(__VA_ARGS__)> ARRAY_NAME = {{__VA_ARGS__}};
 // --- 附加 std::tr1::array<>.size()
-#define ENUM_ARRAY_TYPE_SIZE(ENUM_NAME, ARRAY_SIZE_NAME, ELEM_TYPE, ARRAY_TYPE_NAME, ARRAY_NAME, ...) 		\
+#define CS_ENUM_WITH_ARRAY_TYPE_SIZE(ENUM_NAME, ARRAY_SIZE_NAME, ELEM_TYPE, ARRAY_TYPE_NAME, ARRAY_NAME, ...) 		\
 	enum ENUM_NAME {__VA_ARGS__}; 																			\
-	const std::size_t ARRAY_SIZE_NAME = CS_PP_NARG(__VA_ARGS__); 											\
+	const CS_STD(size_t) ARRAY_SIZE_NAME = CS_PP_NARG(__VA_ARGS__); 											\
 	typedef std::tr1::array<ELEM_TYPE, ARRAY_SIZE_NAME> ARRAY_TYPE_NAME; 									\
 	const ARRAY_TYPE_NAME ARRAY_NAME = {{__VA_ARGS__}};
