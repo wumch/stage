@@ -48,7 +48,7 @@
 #if defined(CS_USE_WCS) && CS_USE_WCS
 #	define CS_STR_LITER(str_liter)		L##str_liter
 #else
-#	define CS_STR_LITER(str_liter)		str_liter
+#	define CS_STR_LITER(str_liter)		#str_liter
 #endif
 
 #ifdef __cplusplus
