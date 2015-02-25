@@ -113,7 +113,7 @@
 					<< ":" << __FUNCTION__ << "()" << ":\t"						\
 					<< __VA_ARGS__												\
 					<< ::std::endl;												\
-				} while(false)
+				} while(false);
 #		else
 #       	define CS_OUT(ostream, ...)											\
 				do {															\
@@ -121,10 +121,10 @@
 					<< ":" << CS_OC_BLUE(__FUNCTION__ << "()") << ":\t"			\
 					<< CS_OC_GREEN(__VA_ARGS__)									\
 					<< ::std::endl;												\
-				} while(false)
+				} while(false);
 #		endif
 #   else
-#		define CS_OUT(ostream, ...)	do {ostream << __VA_ARGS__ << ::std::endl;} while(false)
+#		define CS_OUT(ostream, ...)	do {ostream << __VA_ARGS__ << ::std::endl;} while(false);
 #   endif
 #else
 #	define CS_OUT(ostream, ...)

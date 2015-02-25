@@ -108,7 +108,7 @@ static CS_FORCE_INLINE bool in(ValueType needle,
 }
 
 template<typename ValueType>
-static CS_FORCE_INLINE bool in(const ValueType needle, int argc, ...)
+static inline bool in(const ValueType needle, int argc, ...)
 {
     std::va_list argp;
     va_start(argp, argc);
