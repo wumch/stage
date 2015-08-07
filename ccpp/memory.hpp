@@ -40,7 +40,7 @@
 
 #endif		// ifdef __GNUC__
 
-namespace staging {
+namespace stage {
 
 template<size_t dwords> CS_FORCE_INLINE static
 int memcmp4(const int32_t* const s1, const int32_t* const s2)

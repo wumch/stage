@@ -11,15 +11,15 @@
 #   define CS_SINGLETON_FUNC_NAME getInstance
 #endif
 
-namespace staging {
+namespace stage {
 
 #define mksingleton(T, ...)									\
-friend T* staging::CS_SINGLETON_FUNC_NAME<T>();			\
+friend T* stage::CS_SINGLETON_FUNC_NAME<T>();			\
 public:														\
     static CS_FORCE_INLINE									\
 	__VA_ARGS__ T* CS_SINGLETON_METHOD_NAME()				\
     {														\
-        return staging::CS_SINGLETON_FUNC_NAME<T>();		\
+        return stage::CS_SINGLETON_FUNC_NAME<T>();		\
     }
 
 template<typename T> CS_FORCE_INLINE

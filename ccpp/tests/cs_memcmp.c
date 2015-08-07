@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "/data/fsuggest/staging/ccpp/memory.h"
+#include "/data/fsuggest/stage/ccpp/memory.h"
 
 int main()
 {

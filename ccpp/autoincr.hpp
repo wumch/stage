@@ -3,7 +3,7 @@
 
 #include "meta.hpp"
 
-namespace staging {
+namespace stage {
 
 template<int tagid_> class AutoIncrTag {};
 template<typename tag_type> class AutoIncrType {};

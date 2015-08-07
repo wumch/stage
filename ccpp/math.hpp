@@ -6,7 +6,7 @@
 #include <boost/operators.hpp>
 #include "misc.hpp"
 
-namespace staging {
+namespace stage {
 
 template<typename ValueType>
 static CS_FORCE_INLINE bool between(ValueType val, ValueType min, ValueType max)
@@ -197,5 +197,5 @@ static inline bool operator==(const Infinitesimal<T>& val, const Infinitesimal<T
 
 #define CS_IN(needle, ...)                                                      \
     (CS_PP_NARG(__VA_ARGS__) < 7 ?                                              \
-    staging::in<int64_t>(needle, __VA_ARGS__) :                                          \
-    staging::in<int64_t>(needle, CS_PP_NARG(__VA_ARGS__), __VA_ARGS__))
+    stage::in<int64_t>(needle, __VA_ARGS__) :                                          \
+    stage::in<int64_t>(needle, CS_PP_NARG(__VA_ARGS__), __VA_ARGS__))

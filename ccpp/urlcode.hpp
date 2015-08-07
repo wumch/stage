@@ -3,7 +3,7 @@
 #include <string>
 #include <string.h>
 
-namespace staging {
+namespace stage {
 
 typedef unsigned char BYTE;
 

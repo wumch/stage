@@ -4,7 +4,7 @@
 #include "meta.hpp"
 #include <string.h>
 
-namespace staging {
+namespace stage {
 
 class NumCast
 {

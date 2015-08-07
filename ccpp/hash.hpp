@@ -8,7 +8,7 @@
 #include <string>
 #include <boost/static_assert.hpp>
 
-namespace staging {
+namespace stage {
 
 template<int int_bits> class IntTrait;
 template<> class IntTrait<32> { public: typedef int32_t type; };

@@ -11,7 +11,7 @@ typedef int64_t rlim_t;
 #	error "system other than linux is currently not supported."
 #endif
 
-namespace staging {
+namespace stage {
 
 static CS_FORCE_INLINE std::size_t getCpuNum()
 {

@@ -7,7 +7,7 @@
 #include <boost/random/variate_generator.hpp>
 #include <boost/noncopyable.hpp>
 
-namespace staging {
+namespace stage {
 
 template<typename EngineType_ = boost::mt19937, typename result_type = uint32_t>
 class RandNumberGenerator
@@ -143,4 +143,4 @@ protected:	// 内部函数
 
 };
 
-} /* namespace staging */
+} /* namespace stage */

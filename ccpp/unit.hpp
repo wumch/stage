@@ -1,7 +1,7 @@
 
 #pragma once
 
-namespace staging {
+namespace stage {
 
 template<int id> class CSUnit {};
 

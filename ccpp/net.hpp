@@ -15,7 +15,7 @@
 #include <arpa/inet.h>
 #include <ifaddrs.h>
 
-namespace staging {
+namespace stage {
 
 static inline bool isLanIP(in_addr_t ip_network_endian)
 {

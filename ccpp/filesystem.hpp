@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <sys/stat.h>
 
-namespace staging {
+namespace stage {
 
 static uint64_t filesize(const char *path)
 {

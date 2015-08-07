@@ -5,7 +5,7 @@
 #include <string>
 #include <ctime>
 
-namespace staging {
+namespace stage {
 
 static inline std::string datetime(time_t time = std::time(NULL))
 {

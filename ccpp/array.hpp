@@ -3,7 +3,7 @@
 
 #include <iterator>
 
-namespace staging {
+namespace stage {
 
 template<class T, std::size_t N>
 class Array

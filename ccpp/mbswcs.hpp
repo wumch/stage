@@ -6,7 +6,7 @@
 #include <string>
 #include <iconv.h>
 
-namespace staging {
+namespace stage {
 
 class mbswcs
 {
