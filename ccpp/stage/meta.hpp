@@ -51,6 +51,10 @@
 #	define CS_STR_LITER(str_liter)		#str_liter
 #endif
 
+#ifndef __GNUC__
+#   define __attribute__(...)
+#endif
+
 #ifdef __cplusplus
 // avoid from boost if possible.
 #	if defined(__GNUC__)	\
