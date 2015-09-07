@@ -87,18 +87,25 @@
 #	define CS_STDERR	::std::cerr
 #endif
 
-#define CS_OC_BLACK(...)	"\033[32;30;5m" << __VA_ARGS__ << "\033[0m"
-#define CS_OC_BLUE(...)		"\033[32;34;5m" << __VA_ARGS__ << "\033[0m"
-#define CS_OC_RED(...)		"\033[32;31;5m" << __VA_ARGS__ << "\033[0m"
-#define CS_OC_GREEN(...)	"\033[32;49;5m" << __VA_ARGS__ << "\033[0m"
+#ifdef __linux__
+#   define CS_OC_BLACK(...) "\033[32;30;5m" << __VA_ARGS__ << "\033[0m"
+#   define CS_OC_BLUE(...)  "\033[32;34;5m" << __VA_ARGS__ << "\033[0m"
+#   define CS_OC_RED(...)   "\033[32;31;5m" << __VA_ARGS__ << "\033[0m"
+#   define CS_OC_GREEN(...) "\033[32;49;5m" << __VA_ARGS__ << "\033[0m"
+#else
+#   define CS_OC_BLACK(...) __VA_ARGS__
+#   define CS_OC_BLUE(...)  __VA_ARGS__
+#   define CS_OC_RED(...)   __VA_ARGS__
+#   define CS_OC_GREEN(...) __VA_ARGS__
+#endif
 
 
 // line-seperator, should only use for IO..
-#ifdef __linux
+#ifdef __linux__
 #	define CS_LINESEP		'\n'
 #	define CS_LINESEP_STR	"\n"
 #else
-#	ifdef(__windows)
+#	ifdef(__WIN32__)
 #		define CS_LINESEP		"\r\n"
 #		define CS_LINESEP_STR	CS_LINESEP
 #	else
@@ -164,7 +171,7 @@
 
 #ifndef CS_ATTR_CONST
 #	ifdef __GNUC__
-#		define CS_ATTR_CONST __attribute__((__const__))
+#		define CS_ATTR_CONST __attribute__((const))
 #	else
 #		define CS_ATTR_CONST
 #	endif
