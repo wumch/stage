@@ -115,6 +115,7 @@
 #endif
 
 #if CS_DEBUG
+#   define CS_DEBUG_OMIT(...)
 #   include <iostream>
 #   if CS_DEBUG > 1
 #		if CS_USE_WCS
@@ -138,6 +139,7 @@
 #		define CS_OUT(ostream, ...)	do {ostream << __VA_ARGS__ << ::std::endl;} while(false);
 #   endif
 #else
+#   define CS_DEBUG_OMIT(...)    __VA_ARGS__
 #	define CS_OUT(ostream, ...)
 #endif
 
