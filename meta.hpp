@@ -39,6 +39,7 @@
 #   define CS_CPP11 1
 #else
 #   define CS_CPP11 0
+#endif
 
 // Use wchar_t/wstring wcout/wcerr/wcin wfstream or not.
 // It's just a standard, not make used in this file.
