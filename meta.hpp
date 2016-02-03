@@ -35,6 +35,11 @@
 #	define BOOST_DISABLE_ASSERTS
 #endif
 
+#if defined(__cplusplus) && __cplusplus >= 201103L
+#   define CS_CPP11 1
+#else
+#   define CS_CPP11 0
+
 // Use wchar_t/wstring wcout/wcerr/wcin wfstream or not.
 // It's just a standard, not make used in this file.
 #ifndef CS_USE_WCS
