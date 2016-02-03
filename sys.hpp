@@ -13,7 +13,7 @@ typedef int64_t rlim_t;
 
 namespace stage {
 
-static CS_FORCE_INLINE std::size_t getCpuNum()
+static inline std::size_t getCpuNum()
 {
 #ifdef __linux
 	return sysconf(_SC_NPROCESSORS_CONF);
@@ -22,7 +22,7 @@ static CS_FORCE_INLINE std::size_t getCpuNum()
 #endif
 }
 
-static CS_FORCE_INLINE rlim_t getRlimitCur(int resource)
+static inline rlim_t getRlimitCur(int resource)
 {
 #ifdef __linux
 	struct rlimit limit;
@@ -33,7 +33,7 @@ static CS_FORCE_INLINE rlim_t getRlimitCur(int resource)
 #endif
 }
 
-static CS_FORCE_INLINE rlim_t getRlimitMax(int resource)
+static inline rlim_t getRlimitMax(int resource)
 {
 #ifdef __linux
 	struct rlimit limit;
@@ -44,7 +44,7 @@ static CS_FORCE_INLINE rlim_t getRlimitMax(int resource)
 #endif
 }
 
-static CS_FORCE_INLINE int setRlimit(int resource, rlim_t expect)
+static inline int setRlimit(int resource, rlim_t expect)
 {
 #ifdef __linux
 	struct rlimit limit;

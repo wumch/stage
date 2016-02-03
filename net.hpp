@@ -95,7 +95,7 @@ static inline std::string getWanIP(const std::string& fallback = std::string("0.
 }
 
 template<typename BytesType>
-CS_FORCE_INLINE BytesType ntoh(BytesType a)
+inline BytesType ntoh(BytesType a)
 {
 	BOOST_STATIC_ASSERT(sizeof(char) == 1);
 	char assist[sizeof(BytesType)];
@@ -111,7 +111,7 @@ CS_FORCE_INLINE BytesType ntoh(BytesType a)
 }
 
 #if CS_IS_LITTLE_ENDIAN
-CS_FORCE_INLINE uint64_t ntohll(uint64_t value)
+inline uint64_t ntohll(uint64_t value)
 {
    static union {
       uint64_t ull;
@@ -128,13 +128,13 @@ CS_FORCE_INLINE uint64_t ntohll(uint64_t value)
    return x.ull;
 }
 #else
-CS_FORCE_INLINE uint64_t ntohll(uint64_t value)
+inline uint64_t ntohll(uint64_t value)
 {
 	return value;
 }
 #endif
 
-CS_FORCE_INLINE uint64_t htonll(const uint64_t value)
+inline uint64_t htonll(const uint64_t value)
 {
    return ntohll(value);
 }
