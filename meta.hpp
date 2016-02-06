@@ -153,7 +153,7 @@
 
 // NOTE: 要自行 #include <iostream>
 #define CS_ECHO(...)	CS_STDOUT << __VA_ARGS__ << ::std::endl;
-#define CS_ERR(...)		CS_STDERR << __VA_ARGS__ << ::std::endl;
+#define CS_ERR(...)		CS_STDERR << CS_OC_RED(__VA_ARGS__) << ::std::endl;
 
 // #define CS_DUMP(...)	CS_OUT(CS_STDOUT, GOL_OC_BLUE(#__VA_ARGS__) << ": " << GOL_OC_GREEN(__VA_ARGS__))
 

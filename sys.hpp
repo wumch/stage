@@ -5,7 +5,9 @@
 #ifdef __linux
 #	include <sys/resource.h>
 #	include <unistd.h>
+#	include <asm/unistd.h>
 #	include <sys/mman.h>
+#   include <sched.h>
 #else
 typedef int64_t rlim_t;
 #	error "system other than linux is currently not supported."
@@ -57,6 +59,15 @@ static inline int setRlimit(int resource, rlim_t expect)
 	return 0;
 #else
 	return 0;
+#endif
+}
+
+static inline pid_t gettid()
+{
+#ifdef __linux
+    return syscall(__NR_gettid);
+#else
+    return getpid();
 #endif
 }
 
