@@ -94,11 +94,21 @@
 #endif
 
 #ifdef __linux__
-#   define CS_OC_BLACK(...) "\033[32;30;5m" << __VA_ARGS__ << "\033[0m"
-#   define CS_OC_BLUE(...)  "\033[32;34;5m" << __VA_ARGS__ << "\033[0m"
-#   define CS_OC_RED(...)   "\033[32;31;5m" << __VA_ARGS__ << "\033[0m"
-#   define CS_OC_GREEN(...) "\033[32;49;5m" << __VA_ARGS__ << "\033[0m"
+#   define CS_OC_BLACK_BEGIN    "\033[32;30;5m"
+#   define CS_OC_BLUE_BEGIN     "\033[32;34;5m"
+#   define CS_OC_RED_BEGIN      "\033[32;31;5m"
+#   define CS_OC_GREEN_BEGIN    "\033[32;49;5m"
+#   define CS_OC_END            "\033[0m"
+#   define CS_OC_BLACK(...)     CS_OC_BLACK_BEGIN   << __VA_ARGS__ << CS_OC_END
+#   define CS_OC_BLUE(...)      CS_OC_BLUE_BEGIN    << __VA_ARGS__ << CS_OC_END
+#   define CS_OC_RED(...)       CS_OC_RED_BEGIN     << __VA_ARGS__ << CS_OC_END
+#   define CS_OC_GREEN(...)     CS_OC_GREEN_BEGIN   << __VA_ARGS__ << CS_OC_END
 #else
+#   define CS_OC_BLACK_BEGIN    ""
+#   define CS_OC_BLUE_BEGIN     ""
+#   define CS_OC_RED_BEGIN      ""
+#   define CS_OC_GREEN_BEGIN    ""
+#   define CS_OC_END            ""
 #   define CS_OC_BLACK(...) __VA_ARGS__
 #   define CS_OC_BLUE(...)  __VA_ARGS__
 #   define CS_OC_RED(...)   __VA_ARGS__
