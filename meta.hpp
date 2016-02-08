@@ -165,9 +165,15 @@
 // #define CS_ERR(msg)
 //	CS_STDERR << msg << ::std::endl
 // --- 要自行 #include <cstdlib>
-#define CS_DIE(msg)																		\
-	CS_ERR(msg); 																		\
+#if CS_DEBUG
+#   define CS_DIE(msg)                                                          \
+    CS_ERR(msg);                                                                \
+    ::std::abort();
+#else
+#   define CS_DIE(msg)															\
+	CS_ERR(msg); 																\
     ::std::exit(CS_EXIT_STATUS_FAILED)
+#endif
 
 #ifndef CS_USED
 #	ifdef __GNUC__
