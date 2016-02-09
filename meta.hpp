@@ -93,7 +93,7 @@
 #	define CS_STDERR	::std::cerr
 #endif
 
-#ifdef __linux__
+#if CS_DEBUG > 1 && defined(__linux__)
 #   define CS_OC_BLACK_BEGIN    "\033[32;30;5m"
 #   define CS_OC_BLUE_BEGIN     "\033[32;34;5m"
 #   define CS_OC_RED_BEGIN      "\033[32;31;5m"
