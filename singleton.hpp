@@ -16,13 +16,13 @@ namespace stage {
 #define mksingleton(T, ...)									\
 friend T* stage::CS_SINGLETON_FUNC_NAME<T>();			\
 public:														\
-    static CS_FORCE_INLINE									\
+    static inline									\
 	__VA_ARGS__ T* CS_SINGLETON_METHOD_NAME()				\
     {														\
         return stage::CS_SINGLETON_FUNC_NAME<T>();		\
     }
 
-template<typename T> CS_FORCE_INLINE
+template<typename T> inline
 T* CS_SINGLETON_FUNC_NAME()
 {
     static T _instance;

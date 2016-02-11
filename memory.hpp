@@ -42,38 +42,38 @@
 
 namespace stage {
 
-template<size_t dwords> CS_FORCE_INLINE static
+template<size_t dwords> inline static
 int memcmp4(const int32_t* const s1, const int32_t* const s2)
 {
 	return ::memcmp(s1, s2, dwords * 4);
 }
-template<> CS_FORCE_INLINE
+template<> inline
 int memcmp4<1>(const int32_t* const s1, const int32_t* const s2)
 {
 	return *reinterpret_cast<const int32_t*>(s1) == *reinterpret_cast<const int32_t*>(s2);
 }
 
-template<> CS_FORCE_INLINE
+template<> inline
 int memcmp4<2>(const int32_t* const s1, const int32_t* const s2)
 {
 	return *reinterpret_cast<const int64_t*>(s1) == *reinterpret_cast<const int64_t*>(s2);
 }
 
-template<> CS_FORCE_INLINE
+template<> inline
 int memcmp4<3>(const int32_t* const s1, const int32_t* const s2)
 {
 	return *reinterpret_cast<const int64_t*>(s1) == *reinterpret_cast<const int64_t*>(s2)
 			&& s1[2] == s2[2];
 }
 
-template<> CS_FORCE_INLINE
+template<> inline
 int memcmp4<4>(const int32_t* const s1, const int32_t* const s2)
 {
 	return *reinterpret_cast<const int64_t*>(s1) == *reinterpret_cast<const int64_t*>(s2)
 			&& reinterpret_cast<const int64_t*>(s1)[1] == reinterpret_cast<const int64_t*>(s2)[1];
 }
 
-template<> CS_FORCE_INLINE
+template<> inline
 int memcmp4<5>(const int32_t* const s1, const int32_t* const s2)
 {
 	return *reinterpret_cast<const int64_t*>(s1) == *reinterpret_cast<const int64_t*>(s2)
@@ -81,7 +81,7 @@ int memcmp4<5>(const int32_t* const s1, const int32_t* const s2)
 		   && s1[4] == s2[4];
 }
 
-template<> CS_FORCE_INLINE
+template<> inline
 int memcmp4<6>(const int32_t* const s1, const int32_t* const s2)
 {
 	return *reinterpret_cast<const int64_t*>(s1) == *reinterpret_cast<const int64_t*>(s2)
@@ -89,7 +89,7 @@ int memcmp4<6>(const int32_t* const s1, const int32_t* const s2)
 			&& reinterpret_cast<const int64_t*>(s1)[2] == reinterpret_cast<const int64_t*>(s2)[2];
 }
 
-template<> CS_FORCE_INLINE
+template<> inline
 int memcmp4<7>(const int32_t* const s1, const int32_t* const s2)
 {
 	return *reinterpret_cast<const int64_t*>(s1) == *reinterpret_cast<const int64_t*>(s2)
@@ -99,39 +99,39 @@ int memcmp4<7>(const int32_t* const s1, const int32_t* const s2)
 }
 
 // ------ memcpy4 ------
-template<size_t dwords> CS_FORCE_INLINE static
+template<size_t dwords> inline static
 void memcpy4(void* const s1, const void* const s2)
 {
 	::memcpy(s1, s2, dwords);
 }
 
-template<> CS_FORCE_INLINE
+template<> inline
 void memcpy4<4>(void* const s1, const void* const s2)
 {
 	*reinterpret_cast<int32_t*>(s1) = *reinterpret_cast<const int32_t*>(s2);
 }
 
-template<> CS_FORCE_INLINE
+template<> inline
 void memcpy4<8>(void* const s1, const void* const s2)
 {
 	*reinterpret_cast<int64_t*>(s1) = *reinterpret_cast<const int64_t*>(s2);
 }
 
-template<> CS_FORCE_INLINE
+template<> inline
 void memcpy4<12>(void* const s1, const void* const s2)
 {
 	*reinterpret_cast<int64_t*>(s1) = *reinterpret_cast<const int64_t*>(s2);
 	reinterpret_cast<int32_t*>(s1)[2] = reinterpret_cast<const int32_t*>(s2)[2];
 }
 
-template<> CS_FORCE_INLINE
+template<> inline
 void memcpy4<16>(void* const s1, const void* const s2)
 {
 	*reinterpret_cast<int64_t*>(s1) = *reinterpret_cast<const int64_t*>(s2);
 	reinterpret_cast<int64_t*>(s1)[1] = reinterpret_cast<const int64_t*>(s2)[1];
 }
 
-template<> CS_FORCE_INLINE
+template<> inline
 void memcpy4<20>(void* const s1, const void* const s2)
 {
 	*reinterpret_cast<int64_t*>(s1) = *reinterpret_cast<const int64_t*>(s2);
@@ -139,7 +139,7 @@ void memcpy4<20>(void* const s1, const void* const s2)
 	reinterpret_cast<int32_t*>(s1)[4] = reinterpret_cast<const int32_t*>(s2)[4];
 }
 
-template<> CS_FORCE_INLINE
+template<> inline
 void memcpy4<24>(void* const s1, const void* const s2)
 {
 	*reinterpret_cast<int64_t*>(s1) = *reinterpret_cast<const int64_t*>(s2);
@@ -147,7 +147,7 @@ void memcpy4<24>(void* const s1, const void* const s2)
 	reinterpret_cast<int64_t*>(s1)[2] = reinterpret_cast<const int64_t*>(s2)[2];
 }
 
-template<> CS_FORCE_INLINE
+template<> inline
 void memcpy4<28>(void* const s1, const void* const s2)
 {
 	*reinterpret_cast<int64_t*>(s1) = *reinterpret_cast<const int64_t*>(s2);
@@ -156,7 +156,7 @@ void memcpy4<28>(void* const s1, const void* const s2)
 	reinterpret_cast<int32_t*>(s1)[6] = reinterpret_cast<const int32_t*>(s2)[6];
 }
 
-template<> CS_FORCE_INLINE
+template<> inline
 void memcpy4<32>(void* const s1, const void* const s2)
 {
 	*reinterpret_cast<int64_t*>(s1) = *reinterpret_cast<const int64_t*>(s2);

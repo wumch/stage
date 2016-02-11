@@ -9,25 +9,25 @@
 namespace stage {
 
 template<typename ValueType>
-static CS_FORCE_INLINE bool between(ValueType val, ValueType min, ValueType max)
+static inline bool between(ValueType val, ValueType min, ValueType max)
 {
 	return min <= val && val <= max;
 }
 
 template<typename ValueType>
-static CS_FORCE_INLINE bool between_open(ValueType val, ValueType min, ValueType max)
+static inline bool between_open(ValueType val, ValueType min, ValueType max)
 {
 	return min < val && val < max;
 }
 
 template<typename ValType>
-static CS_FORCE_INLINE ValType square(ValType val)
+static inline ValType square(ValType val)
 {
 	return val * val;
 }
 
 template<typename ResType, typename IterType>
-static CS_FORCE_INLINE ResType sum(const IterType& begin, const IterType& end)
+static inline ResType sum(const IterType& begin, const IterType& end)
 {
 	ResType res = 0;
 	for (IterType it = begin; it != end; ++it)
@@ -42,20 +42,20 @@ static CS_FORCE_INLINE ResType sum(const IterType& begin, const IterType& end)
  * NOTE: designed for only numeric-types.
  */
 template<typename ValueType>
-static CS_FORCE_INLINE bool in(ValueType needle)
+static inline bool in(ValueType needle)
 {
    return false;
 }
 
 template<typename ValueType>
-static CS_FORCE_INLINE bool in(ValueType needle,
+static inline bool in(ValueType needle,
     ValueType elem_1)
 {
     return needle == elem_1;
 }
 
 template<typename ValueType>
-static CS_FORCE_INLINE bool in(ValueType needle,
+static inline bool in(ValueType needle,
     ValueType elem_1,
     ValueType elem_2)
 {
@@ -63,7 +63,7 @@ static CS_FORCE_INLINE bool in(ValueType needle,
 }
 
 template<typename ValueType>
-static CS_FORCE_INLINE bool in(ValueType needle,
+static inline bool in(ValueType needle,
     ValueType elem_1,
     ValueType elem_2,
     ValueType elem_3)
@@ -72,7 +72,7 @@ static CS_FORCE_INLINE bool in(ValueType needle,
 }
 
 template<typename ValueType>
-static CS_FORCE_INLINE bool in(ValueType needle,
+static inline bool in(ValueType needle,
     ValueType elem_1,
     ValueType elem_2,
     ValueType elem_3,
@@ -83,7 +83,7 @@ static CS_FORCE_INLINE bool in(ValueType needle,
 }
 
 template<typename ValueType>
-static CS_FORCE_INLINE bool in(ValueType needle,
+static inline bool in(ValueType needle,
     ValueType elem_1,
     ValueType elem_2,
     ValueType elem_3,
@@ -95,7 +95,7 @@ static CS_FORCE_INLINE bool in(ValueType needle,
 }
 
 template<typename ValueType>
-static CS_FORCE_INLINE bool in(ValueType needle,
+static inline bool in(ValueType needle,
     ValueType elem_1,
     ValueType elem_2,
     ValueType elem_3,

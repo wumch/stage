@@ -24,7 +24,7 @@ template<int input_bits, typename output_bits = uint32_t> class HashProxyUInt;
 class Hash64to32
 {
 public:
-	CS_FORCE_INLINE uint32_t operator()(uint64_t val) const
+	inline uint32_t operator()(uint64_t val) const
 	{
 		val = (~val) + (val << 18); // val = (val << 18) - val - 1;
 		val ^= (val >> 31);
@@ -36,7 +36,7 @@ public:
 	}
 
 	template<typename T>
-	CS_FORCE_INLINE uint32_t operator()(const T* ptr) const
+	inline uint32_t operator()(const T* ptr) const
 	{
 		return (*this)((uint64_t)ptr);
 	}
@@ -47,7 +47,7 @@ template<typename IntType = uint32_t>
 class HashTomasWang32
 {
 public:
-	CS_FORCE_INLINE IntType operator()(IntType val) const
+	inline IntType operator()(IntType val) const
 	{
 		val = (~val) + (val << 15); // val = (val << 15) - val - 1;
 		val ^= (val >> 12);
@@ -64,7 +64,7 @@ template<typename IntType = uint64_t>
 class HashTomasWang64
 {
 public:
-	CS_FORCE_INLINE IntType operator()(IntType val) const
+	inline IntType operator()(IntType val) const
 	{
 		val = (~val) + (val << 21); // val = (val << 21) - val - 1;
 		val ^= (val >> 24);
@@ -81,7 +81,7 @@ public:
 class HashMix96
 {
 public:
-	CS_FORCE_INLINE uint32_t operator()(uint32_t a, uint32_t b, uint32_t c) const
+	inline uint32_t operator()(uint32_t a, uint32_t b, uint32_t c) const
 	{
 		a=a-b;  a=a-c;  a=a^(c >> 13);
 		b=b-c;  b=b-a;  b=b^(a << 8);
@@ -101,7 +101,7 @@ template<typename IntType = uint32_t>
 class HashBobJenkins
 {
 public:
-	CS_FORCE_INLINE IntType operator()(IntType val) const
+	inline IntType operator()(IntType val) const
 	{
 	   val = (val + 0x7ed55d16) + (val << 12);
 	   val = (val ^ 0xc761c23c) ^ (val >> 19);
@@ -117,7 +117,7 @@ template<uint32_t mod, typename IntType = uint64_t>
 class HashMod
 {
 public:
-	CS_FORCE_INLINE IntType operator()(IntType val) const
+	inline IntType operator()(IntType val) const
 	{
 		return val % mod;
 	}
@@ -128,7 +128,7 @@ class HashHflp
 {
 	BOOST_STATIC_ASSERT(bits <= (sizeof(int) * CHAR_BIT));
 public:
-	CS_FORCE_INLINE uint32_t operator()(const StringType& data) const
+	inline uint32_t operator()(const StringType& data) const
 	{
 		unsigned int mask = 0;
 		char* res = reinterpret_cast<char*>(&mask);
@@ -145,8 +145,8 @@ class HashBits
 {
 	BOOST_STATIC_ASSERT(bits < 64);
 public:
-	template<typename ValType> CS_FORCE_INLINE
-	CS_FORCE_INLINE ValType operator()(ValType val) const
+	template<typename ValType> inline
+	inline ValType operator()(ValType val) const
 	{
 		return val & ((1 << bits) - 1);
 	}
@@ -156,7 +156,7 @@ public:
 class HashSDBM
 {
 public:
-	CS_FORCE_INLINE uint32_t operator()(const char* const str, size_t size) const
+	inline uint32_t operator()(const char* const str, size_t size) const
 	{
 		unsigned int hash = 0;
 		for (uint i = 0; i < size; ++i)
@@ -172,7 +172,7 @@ public:
 class HashJS
 {
 public:
-	CS_FORCE_INLINE uint32_t operator()(const std::string& str) const
+	inline uint32_t operator()(const std::string& str) const
 	{
 	    unsigned int hash = 1315423911;
 	    for (uint i = 0; i < str.size(); ++i)
@@ -190,7 +190,7 @@ class Hflp
 {
 	BOOST_STATIC_ASSERT(bits <= (sizeof(int) * CHAR_BIT));
 public:
-	CS_FORCE_INLINE uint32_t operator()(const StringType& data) const
+	inline uint32_t operator()(const StringType& data) const
 	{
 		unsigned int mask = 0;
 		char* res = reinterpret_cast<char*>(&mask);
@@ -207,8 +207,8 @@ class BitsHash
 {
 	BOOST_STATIC_ASSERT(bits < 64);
 public:
-	template<typename ValType> CS_FORCE_INLINE
-	CS_FORCE_INLINE ValType operator()(ValType val) const
+	template<typename ValType> inline
+	inline ValType operator()(ValType val) const
 	{
 		return val & ((1 << bits) - 1);
 	}
@@ -218,7 +218,7 @@ public:
 class SDBMHash
 {
 public:
-	CS_FORCE_INLINE uint32_t operator()(const char* const str, size_t size) const
+	inline uint32_t operator()(const char* const str, size_t size) const
 	{
 		unsigned int hash = 0;
 		for (uint i = 0; i < size; ++i)
@@ -234,7 +234,7 @@ public:
 class JSHash
 {
 public:
-	CS_FORCE_INLINE uint32_t operator()(const std::string& str) const
+	inline uint32_t operator()(const std::string& str) const
 	{
 	    unsigned int hash = 1315423911;
 	    for (uint i = 0; i < str.size(); ++i)
