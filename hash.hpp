@@ -146,7 +146,7 @@ class HashBits
 	BOOST_STATIC_ASSERT(bits < 64);
 public:
 	template<typename ValType> inline
-	inline ValType operator()(ValType val) const
+	ValType operator()(ValType val) const
 	{
 		return val & ((1 << bits) - 1);
 	}
@@ -208,7 +208,7 @@ class BitsHash
 	BOOST_STATIC_ASSERT(bits < 64);
 public:
 	template<typename ValType> inline
-	inline ValType operator()(ValType val) const
+	ValType operator()(ValType val) const
 	{
 		return val & ((1 << bits) - 1);
 	}
